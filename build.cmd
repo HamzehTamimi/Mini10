@@ -24,26 +24,35 @@ del /f /q "%~dp0DVD\NTLite.log"
 del /f /q "%~dp0DVD\sources\install.ini"
 echo Copying unattended file...
 copy /Y "%~dp0Plugins\Unattend\autounattend.xml" "%~dp0DVD\autounattend.xml"
-echo Modifying image...
+echo Modifying images...
 md "%~dp0Mount"
+md "%~dp0Boot_Mount"
 dism /export-image /SourceImageFile:"%~dp0DVD\sources\install.esd" /SourceIndex:1 /DestinationImageFile:"%~dp0DVD\sources\install.wim" /Compress:max
 del /f /q "%~dp0DVD\sources\install.esd"
 dism /mount-image /imageFile:"%~dp0DVD\sources\install.wim" /Index:1 /MountDir:""%~dp0Mount"
+dism /mount-image /imageFile:"%~dp0DVD\sources\boot.wim" /Index:1 /MountDir:""%~dp0Boot_Mount"
 reg load HKEY_LOCAL_MACHINE\MINI10_NTUSER "%~dp0Mount\Users\Default\ntuser.dat"
 reg load HKEY_LOCAL_MACHINE\MINI10_SOFTWARE "%~dp0Mount\Windows\System32\config\SOFTWARE"
-reg load HKEY_LOCAL_MACHINE\MINI10_SOFTWARE "%~dp0Mount\Windows\System32\config\SYSTEM"
+reg load HKEY_LOCAL_MACHINE\MINI10_SYSTEM "%~dp0Mount\Windows\System32\config\SYSTEM"
+reg load HKEY_LOCAL_MACHINE\MINI10_SOFTWARE_BOOT "%~dp0Boot_Mount\Windows\System32\config\SOFTWARE"
+reg load HKEY_LOCAL_MACHINE\MINI10_SYSTEM_BOOT "%~dp0Boot_Mount\Windows\System32\config\SYSTEM"
 for /F %%f in ('dir "%~dp0Plugins\Registry\*.reg" /s /b') do (regedit /s %%f)
 reg unload HKEY_LOCAL_MACHINE\MINI10_NTUSER
 reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM
+reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE_BOOT
+reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM_BOOT
 copy /Y "%~dp0Plugins\RunOnce\RunOnce.cmd" "%~dp0Mount\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\RunOnce.cmd"
+copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img0.jpg"
+copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img100.jpg"
 robocopy "%~dp0Plugins\AdditionalFiles" "%~dp0Mount"
 del /f /q "%~dp0Mount\_README.txt"
 md "%~dp0DVD\sources\$OEM$"
 robocopy "%~dp0Plugins\OEM" "%~dp0DVD\sources\$OEM$"
 del /f /q "%~dp0DVD\sources\$OEM$\_README.txt"
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
-echo Converting WIM to ESD...
+dism /unmount-image /MountDir:"%~dp0Boot_Mount" /Commit
+echo Compressing images...
 dism /export-image /SourceImageFile:"%~dp0DVD\sources\install.wim" /SourceIndex:1 /DestinationImageFile:"%~dp0DVD\sources\install.esd" /Compress:recovery
 del /f /q "%~dp0DVD\sources\install.wim"
 echo Making ISO...
