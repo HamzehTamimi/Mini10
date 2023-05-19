@@ -104,7 +104,19 @@
 <SynchronousCommand wcm:action="add">
 <Order>3</Order>
 <RequiresUserInput>false</RequiresUserInput>
-<CommandLine>cmd /C wmic useraccount where name="User" set PasswordExpires=false</CommandLine>
+<CommandLine>cmd /C wmic pagefileset where name="%SystemDrive%\pagefile.sys" delete</CommandLine>
+<Description>Password Never Expires</Description>
+</SynchronousCommand>
+<SynchronousCommand wcm:action="add">
+<Order>5</Order>
+<RequiresUserInput>false</RequiresUserInput>
+<CommandLine>cmd /C Compact /C /S /I /F /Q %SystemDrive\*.*</CommandLine>
+<Description>Password Never Expires</Description>
+</SynchronousCommand>
+<SynchronousCommand wcm:action="add">
+<Order>4</Order>
+<RequiresUserInput>false</RequiresUserInput>
+<CommandLine>cmd /C %WinDir%\Panther\RunOnce.cmd</CommandLine>
 <Description>Password Never Expires</Description>
 </SynchronousCommand>
 </FirstLogonCommands>

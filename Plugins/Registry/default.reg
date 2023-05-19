@@ -15,6 +15,3 @@ Windows Registry Editor Version 5.00
 ;Disable annoyware on lockscreen
 [HKEY_LOCAL_MACHINE\MINI10_NTUSER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
 "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK"=dword:00000000
-;RunOnce
-[HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
-"Mini10_RunOnce"="%WinDir%\Panther\RunOnce.cmd"

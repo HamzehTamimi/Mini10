@@ -28,5 +28,5 @@ jobs:
             Build ID (click to see changes): ${{ github.sha }}
           prerelease: true
           tag_name: autobuild_${{ github.sha }}
-          name: Mini10 Autobuild
+          name: ${{ github.event.head_commit.message }}
           token: ${{ secrets.token }}
