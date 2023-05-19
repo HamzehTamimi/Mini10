@@ -62,6 +62,8 @@ del /q /f "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll"
 takeown /f "%~dp0Boot_Mount\sources\SetupHost.exe"
 icacls "%~dp0Boot_Mount\sources\SetupHost.exe" /grant everyone:F
 del /q /f "%~dp0Boot_Mount\sources\SetupHost.exe"
+dism /Image:"%~dp0Mount" /Add-Driver /Driver:"%~dp0Plugins\Drivers" /Recurse
+dism /Image:"%~dp0Boot_Mount" /Add-Driver /Driver:"%~dp0Plugins\BootDrivers" /Recurse
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
 dism /unmount-image /MountDir:"%~dp0Boot_Mount" /Commit
 echo Compressing images...
