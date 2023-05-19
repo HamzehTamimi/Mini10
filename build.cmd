@@ -4,12 +4,12 @@ cd /d %~dp0
 echo Mini10 Automatic Builder
 echo Version 1.0
 echo.
+echo Image Version 1809 (Windows 10 LTSC 2019)
 net file >nul 2>&1
 if "%errorlevel%" neq "0" (
 	"%~dp0Bin\NSudo.exe" -U:T -P:E -Priority:RealTime %0% >nul 2>&1
-	exit
+	goto :eof
 )
-echo Image Version 1809 (Windows 10 LTSC 2019)
 echo.
 if exist "%~dp0DVD.iso" (echo ISO was found, skipping...) else (
 echo Downloading with aria2...
@@ -42,21 +42,37 @@ reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM
 reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE_BOOT
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM_BOOT
-copy /Y "%~dp0Plugins\RunOnce\RunOnce.cmd" "%~dp0Mount\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\RunOnce.cmd"
+md "%~dp0Mount\Windows\Panther\RunOnce"
+robocopy "%~dp0Plugins\RunOnce" "%~dp0Mount\Windows\Panther\RunOnce"
+del /f /q "%~dp0Mount\Windows\Panther\RunOnce\_README.txt"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img0.jpg"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img100.jpg"
 robocopy "%~dp0Plugins\AdditionalFiles" "%~dp0Mount"
+robocopy "%~dp0Plugins\AdditionalBootFiles" "%~dp0Boot_Mount"
+robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD"
 del /f /q "%~dp0Mount\_README.txt"
+del /f /q "%~dp0Boot_Mount\_README.txt"
+del /f /q "%~dp0DVD\_README.txt"
 md "%~dp0DVD\sources\$OEM$"
 robocopy "%~dp0Plugins\OEM" "%~dp0DVD\sources\$OEM$"
 del /f /q "%~dp0DVD\sources\$OEM$\_README.txt"
+takeown /f "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll"
+icacls "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll" /grant everyone:F
+del /q /f "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll"
+takeown /f "%~dp0Boot_Mount\sources\SetupHost.exe"
+icacls "%~dp0Boot_Mount\sources\SetupHost.exe" /grant everyone:F
+del /q /f "%~dp0Boot_Mount\sources\SetupHost.exe"
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
 dism /unmount-image /MountDir:"%~dp0Boot_Mount" /Commit
 echo Compressing images...
 dism /export-image /SourceImageFile:"%~dp0DVD\sources\install.wim" /SourceIndex:1 /DestinationImageFile:"%~dp0DVD\sources\install.esd" /Compress:recovery
+dism /export-image /SourceImageFile:"%~dp0DVD\sources\boot.wim" /SourceIndex:1 /DestinationImageFile:"%~dp0DVD\sources\boot2.wim" /Compress:max
+del /f /q "%~dp0DVD\sources\boot.wim"
+rename "%~dp0DVD\sources\boot2.wim" boot.wim
 del /f /q "%~dp0DVD\sources\install.wim"
 echo Making ISO...
 "%~dp0Bin\oscdimg.exe" -h -m -o -u2 -udfver102 -bootdata:"2#p0,e,b%~dp0DVD\boot\etfsboot.com#pEF,e,b%~dp0DVD\efi\microsoft\boot\efisys.bin" -lMini10 "%~dp0DVD" "%~dp0Mini10.iso"
 echo Cleaning up...
 rd /s /q "%~dp0DVD"
 rd /s /q "%~dp0Mount"
+goto :eof

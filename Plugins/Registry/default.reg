@@ -1,14 +1,6 @@
 Windows Registry Editor Version 5.00
 
-
-;These registry settings will be added to the build.
-;
-;Use:
-;- HKEY_LOCAL_MACHINE\MINI10_SOFTWARE for HKEY_LOCAL_MACHINE\SOFTWARE
-;- HKEY_LOCAL_MACHINE\MINI10_SYSTEM for HKEY_LOCAL_MACHINE\SYSTEM
-;- HKEY_LOCAL_MACHINE\MINI10_NTUSER for HKEY_CURRENT_USER
-;
-;Copyright (C) 2023 Vichingo455. All rights reserved.
+;DO NOT TOUCH THIS REGISTRY FILE. IT IS NEEDED FOR MINI10 TO CORRECTLY WORK
 
 ;Disable pagefile
 [HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\ControlSet001\Control\Session Manager\Memory Management]
@@ -20,6 +12,9 @@ Windows Registry Editor Version 5.00
 ;Disable Microsoft Account
 [HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 "NoConnectedUser"=dword:00000003
-
+;Disable annoyware on lockscreen
 [HKEY_LOCAL_MACHINE\MINI10_NTUSER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
 "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK"=dword:00000000
+;RunOnce
+[HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce]
+"Mini10_RunOnce"="%WinDir%\Panther\RunOnce.cmd"
