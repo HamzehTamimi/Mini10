@@ -29,3 +29,4 @@ jobs:
           prerelease: true
           tag_name: autobuild_${{ github.sha }}
           name: Mini10 Autobuild
+          token: ${{ secrets.token }}
