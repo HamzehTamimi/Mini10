@@ -12,12 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set CI variable and run build script and print size
+      - name: Build ISO
         run: |
           cmd.exe /c build.cmd
           Write-Host((Get-Item Mini10.iso).length/1GB)
 
-      - name: Release
+      - name: Upload ISO to release
         uses: softprops/action-gh-release@v1
         with:
           files: "Mini10.iso"
