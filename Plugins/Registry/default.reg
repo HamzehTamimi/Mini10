@@ -1,0 +1,25 @@
+Windows Registry Editor Version 5.00
+
+
+;These registry settings will be added to the build.
+;
+;Use:
+;- HKEY_LOCAL_MACHINE\MINI10_SOFTWARE for HKEY_LOCAL_MACHINE\SOFTWARE
+;- HKEY_LOCAL_MACHINE\MINI10_SYSTEM for HKEY_LOCAL_MACHINE\SYSTEM
+;- HKEY_LOCAL_MACHINE\MINI10_NTUSER for HKEY_CURRENT_USER
+;
+;Copyright (C) 2023 Vichingo455. All rights reserved.
+
+;Disable pagefile
+[HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\ControlSet001\Control\Session Manager\Memory Management]
+"PagingFiles"=hex(7):00,00,00,00
+;Enable UAC
+[HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"EnableLUA"=dword:00000001
+"ConsentPromptBehaviorAdmin"=dword:00000005
+;Disable Microsoft Account
+[HKEY_LOCAL_MACHINE\MINI10_SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"NoConnectedUser"=dword:00000003
+
+[HKEY_LOCAL_MACHINE\MINI10_NTUSER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings]
+"NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK"=dword:00000000
