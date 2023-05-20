@@ -67,6 +67,16 @@ rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Backup"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\InstallTemp"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\ManifestCache"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Temp"
+takeown /F "%~dp0Mount\Windows\System32\themeui.dll"
+icacls "%~dp0Mount\Windows\System32\themeui.dll" /grant everyone:F
+takeown /F "%~dp0Mount\Windows\System32\uxinit.dll"
+icacls "%~dp0Mount\Windows\System32\uxinit.dll" /grant everyone:F
+rename "%~dp0Mount\Windows\System32\uxinit.dll" uxinit.dll.backup
+copy /Y "%~dp0Plugins\UXThemePatch\uxinit.dll" "%~dp0Mount\Windows\System32\uxinit.dll"
+rename "%~dp0Mount\Windows\System32\themeui.dll" themeui.dll.backup
+copy /Y "%~dp0Plugins\UXThemePatch\themeui.dll" "%~dp0Mount\Windows\System32\themeui.dll"
+robocopy "%~dp0Plugins\Themes" "%~dp0Mount\Windows\Resources\Themes"
+del /f /q "%~dp0Mount\Windows\Resources\Themes\_README.txt"
 for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b') do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b') do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 dism /Image:"%~dp0Mount" /Add-Driver /Driver:"%~dp0Plugins\Drivers" /Recurse
