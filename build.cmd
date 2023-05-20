@@ -67,8 +67,8 @@ rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Backup"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\InstallTemp"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\ManifestCache"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Temp"
-for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b) do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
-for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b) do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
+for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b') do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
+for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b') do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 dism /Image:"%~dp0Mount" /Add-Driver /Driver:"%~dp0Plugins\Drivers" /Recurse
 dism /Image:"%~dp0Boot_Mount" /Add-Driver /Driver:"%~dp0Plugins\BootDrivers" /Recurse
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
