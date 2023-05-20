@@ -62,6 +62,13 @@ del /q /f "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll"
 takeown /f "%~dp0Boot_Mount\sources\SetupHost.exe"
 icacls "%~dp0Boot_Mount\sources\SetupHost.exe" /grant everyone:F
 del /q /f "%~dp0Boot_Mount\sources\SetupHost.exe"
+for /f %%f in ('dir "%~dp0Boot_Mount\Windows\WinSxS\Backup" /s /b') do (takeown /f %%f && icacls %%f /grant everyone:F)
+rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Backup"
+rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\InstallTemp"
+rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\ManifestCache"
+rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Temp"
+for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b) do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
+for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b) do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 dism /Image:"%~dp0Mount" /Add-Driver /Driver:"%~dp0Plugins\Drivers" /Recurse
 dism /Image:"%~dp0Boot_Mount" /Add-Driver /Driver:"%~dp0Plugins\BootDrivers" /Recurse
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
@@ -77,4 +84,5 @@ echo Making ISO...
 echo Cleaning up...
 rd /s /q "%~dp0DVD"
 rd /s /q "%~dp0Mount"
+rd /s /q "%~dp0Boot_Mount"
 goto :eof
