@@ -63,12 +63,15 @@ takeown /f "%~dp0Boot_Mount\sources\SetupHost.exe"
 icacls "%~dp0Boot_Mount\sources\SetupHost.exe" /grant everyone:F
 del /q /f "%~dp0Boot_Mount\sources\SetupHost.exe"
 for /f %%f in ('dir "%~dp0Boot_Mount\Windows\WinSxS\Backup" /s /b') do (takeown /f %%f && icacls %%f /grant everyone:F)
+takeown /f "%~dp0Boot_Mount\Windows\WinSxS\Backup"
+icacls "%~dp0Boot_Mount\Windows\WinSxS\Backup" /grant everyone:F
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Backup"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\InstallTemp"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\ManifestCache"
 rd /s /q "%~dp0Boot_Mount\Windows\WinSxS\Temp"
 for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b') do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b') do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
+for /f %%f in ('dir "%~dp0Plugins\Updates\*.msu" /s /b') do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 dism /Image:"%~dp0Mount" /Add-Driver /Driver:"%~dp0Plugins\Drivers" /Recurse
 dism /Image:"%~dp0Boot_Mount" /Add-Driver /Driver:"%~dp0Plugins\BootDrivers" /Recurse
 dism /unmount-image /MountDir:"%~dp0Mount" /Commit
@@ -79,6 +82,9 @@ dism /export-image /SourceImageFile:"%~dp0DVD\sources\boot.wim" /SourceIndex:1 /
 del /f /q "%~dp0DVD\sources\boot.wim"
 rename "%~dp0DVD\sources\boot2.wim" boot.wim
 del /f /q "%~dp0DVD\sources\install.wim"
+echo Copying custom files to ISO...
+robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD"
+del /f /q "%~dp0DVD\_README.txt"
 echo Making ISO...
 "%~dp0Bin\oscdimg.exe" -h -m -o -u2 -udfver102 -bootdata:"2#p0,e,b%~dp0DVD\boot\etfsboot.com#pEF,e,b%~dp0DVD\efi\microsoft\boot\efisys.bin" -lMini10 "%~dp0DVD" "%~dp0Mini10.iso"
 echo Cleaning up...
