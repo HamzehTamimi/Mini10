@@ -43,18 +43,18 @@ reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM
 reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE_BOOT
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM_BOOT
 md "%~dp0Mount\Windows\Panther\RunOnce"
-robocopy "%~dp0Plugins\RunOnce" "%~dp0Mount\Windows\Panther\RunOnce"
+robocopy "%~dp0Plugins\RunOnce" "%~dp0Mount\Windows\Panther\RunOnce" /E
 del /f /q "%~dp0Mount\Windows\Panther\RunOnce\_README.txt"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img0.jpg"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Screen\img100.jpg"
-robocopy "%~dp0Plugins\AdditionalFiles" "%~dp0Mount"
-robocopy "%~dp0Plugins\AdditionalBootFiles" "%~dp0Boot_Mount"
-robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD"
+robocopy "%~dp0Plugins\AdditionalFiles" "%~dp0Mount" /E
+robocopy "%~dp0Plugins\AdditionalBootFiles" "%~dp0Boot_Mount" /E
+robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD" /E
 del /f /q "%~dp0Mount\_README.txt"
 del /f /q "%~dp0Boot_Mount\_README.txt"
 del /f /q "%~dp0DVD\_README.txt"
 md "%~dp0DVD\sources\$OEM$"
-robocopy "%~dp0Plugins\OEM" "%~dp0DVD\sources\$OEM$"
+robocopy "%~dp0Plugins\OEM" "%~dp0DVD\sources\$OEM$" /E
 del /f /q "%~dp0DVD\sources\$OEM$\_README.txt"
 takeown /f "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll"
 icacls "%~dp0Boot_Mount\sources\MediaSetupUIMgr.dll" /grant everyone:F
@@ -77,7 +77,7 @@ rename "%~dp0Mount\Windows\System32\uxinit.dll" uxinit.dll.backup
 copy /Y "%~dp0Plugins\UXThemePatch\uxinit.dll" "%~dp0Mount\Windows\System32\uxinit.dll"
 rename "%~dp0Mount\Windows\System32\themeui.dll" themeui.dll.backup
 copy /Y "%~dp0Plugins\UXThemePatch\themeui.dll" "%~dp0Mount\Windows\System32\themeui.dll"
-robocopy "%~dp0Plugins\Themes" "%~dp0Mount\Windows\Resources\Themes"
+robocopy "%~dp0Plugins\Themes" "%~dp0Mount\Windows\Resources\Themes" /E
 del /f /q "%~dp0Mount\Windows\Resources\Themes\_README.txt"
 for /f %%f in ('dir "%~dp0Plugins\Packages\*.cab" /s /b') do (dism /image:"%~dp0Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
 for /f %%f in ('dir "%~dp0Plugins\WinPEPackages\*.cab" /s /b') do (dism /image:"%~dp0Boot_Mount" /add-package /packagepath:%%f /IgnoreCheck /PreventPending)
@@ -93,7 +93,7 @@ del /f /q "%~dp0DVD\sources\boot.wim"
 rename "%~dp0DVD\sources\boot2.wim" boot.wim
 del /f /q "%~dp0DVD\sources\install.wim"
 echo Copying custom files to ISO...
-robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD"
+robocopy "%~dp0Plugins\ISOAdditionalFiles" "%~dp0DVD" /E
 del /f /q "%~dp0DVD\_README.txt"
 echo Making ISO...
 "%~dp0Bin\oscdimg.exe" -h -m -o -u2 -udfver102 -bootdata:"2#p0,e,b%~dp0DVD\boot\etfsboot.com#pEF,e,b%~dp0DVD\efi\microsoft\boot\efisys.bin" -lMini10 "%~dp0DVD" "%~dp0Mini10.iso"
