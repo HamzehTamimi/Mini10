@@ -108,16 +108,16 @@
 <Description>Disable paging file</Description>
 </SynchronousCommand>
 <SynchronousCommand wcm:action="add">
+<Order>4</Order>
+<RequiresUserInput>false</RequiresUserInput>
+<CommandLine>cmd /C %WinDir%\Setup\RunOnce\RunOnce.cmd</CommandLine>
+<Description>RunOnce script</Description>
+</SynchronousCommand>
+<SynchronousCommand wcm:action="add">
 <Order>5</Order>
 <RequiresUserInput>false</RequiresUserInput>
 <CommandLine>cmd /C Compact /C /S /I /F /Q %SystemDrive\*.*</CommandLine>
 <Description>Compact OS</Description>
-</SynchronousCommand>
-<SynchronousCommand wcm:action="add">
-<Order>4</Order>
-<RequiresUserInput>false</RequiresUserInput>
-<CommandLine>cmd /C %WinDir%\Panther\RunOnce.cmd</CommandLine>
-<Description>RunOnce script</Description>
 </SynchronousCommand>
 </FirstLogonCommands>
 <TimeZone>Pacific Standard Time</TimeZone>

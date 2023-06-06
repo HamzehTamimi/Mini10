@@ -42,8 +42,8 @@ reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM
 reg unload HKEY_LOCAL_MACHINE\MINI10_SOFTWARE_BOOT
 reg unload HKEY_LOCAL_MACHINE\MINI10_SYSTEM_BOOT
-md "%~dp0Mount\Windows\Panther\RunOnce"
-robocopy "%~dp0Plugins\RunOnce" "%~dp0Mount\Windows\Panther\RunOnce" /E
+md "%~dp0Mount\Windows\Setup\RunOnce"
+robocopy "%~dp0Plugins\RunOnce" "%~dp0Mount\Windows\Setup\RunOnce" /E
 del /f /q "%~dp0Mount\Windows\Panther\RunOnce\_README.txt"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Wallpaper\Windows\img0.jpg"
 copy /Y "%~dp0Plugins\DefaultWallpaper\img0.jpg" "%~dp0Mount\Windows\Web\Screen\img100.jpg"
